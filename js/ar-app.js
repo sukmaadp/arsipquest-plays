@@ -27,12 +27,7 @@ function initAR() {
     return;
   }
 
-  // Double check checkout/attempt status. If already attempted, kick back.
-  const state = localStorage.getItem(`aq_status_${currentSite.id}`);
-  if (state) {
-    window.location.href = `index.html?site=${currentSite.id}`;
-    return;
-  }
+
 
   // Setup UI elements metadata
   document.getElementById("ar-site-name").innerText = currentSite.name.toUpperCase();
@@ -87,14 +82,14 @@ function hideInitialSplash() {
   }
 }
 
-// 2. Hiro Scanning Splash Screen (10 seconds)
+// 2. Hiro Scanning Splash Screen (20 seconds)
 function startHiroSplash() {
   const hiroSplash = document.getElementById("hiro-splash");
   if (hiroSplash) {
     hiroSplash.classList.remove("hidden");
   }
 
-  let timeLeft = 10;
+  let timeLeft = 20;
   const hiroSecondsEl = document.getElementById("hiro-seconds");
 
   hiroTimer = setInterval(() => {
@@ -198,8 +193,7 @@ function submitQuiz() {
   const isCorrect = (selectedOption === currentSite.correct_answer);
   const resultState = isCorrect ? "success" : "failed";
 
-  // Lock status permanently in localStorage
-  localStorage.setItem(`aq_status_${currentSite.id}`, resultState);
+
 
   // Close quiz modal
   document.getElementById("quiz-modal").classList.remove("open");

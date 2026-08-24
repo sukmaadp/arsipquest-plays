@@ -38,19 +38,21 @@
 
   <!-- 1B. HIRO MARKER SCANNING SPLASH (10 SECONDS) -->
   <div id="hiro-splash" class="hiro-splash-overlay hidden">
-    <div class="hiro-splash-content">
-      <div class="scan-target-box">
-        <div class="corner-border top-left"></div>
-        <div class="corner-border top-right"></div>
-        <div class="corner-border bottom-left"></div>
-        <div class="corner-border bottom-right"></div>
-        <div class="scan-reticle"></div>
-      </div>
-      <h2 style="font-size: 18px; margin-bottom: 12px; font-family: var(--font-header);">ARAHKAN KE HIRO MARKER</h2>
-      <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-muted); max-width: 280px; margin: 0 auto 20px auto;">Dekatkan kamera ke Hiro Marker pada kartu fisik untuk memproyeksikan Diorama 3D situs sejarah.</p>
-      
-      <div id="hiro-countdown" class="hiro-timer-pill">
-        <span>MEMULAI KUIS DALAM</span> <strong id="hiro-seconds">10</strong>
+    <!-- Transparent target box centered on screen -->
+    <div class="scan-target-box">
+      <div class="corner-border top-left"></div>
+      <div class="corner-border top-right"></div>
+      <div class="corner-border bottom-left"></div>
+      <div class="corner-border bottom-right"></div>
+      <div class="scan-reticle"></div>
+    </div>
+    
+    <!-- Small floating card for guidance texts and timer, with semi-transparent background -->
+    <div class="hiro-guidance-card">
+      <h2 style="font-size: 14px; margin-bottom: 6px; font-family: var(--font-header);">ARAHKAN KE HIRO MARKER</h2>
+      <p style="font-family: var(--font-body); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">Dekatkan kamera ke Hiro Marker pada kartu fisik untuk memproyeksikan Diorama 3D.</p>
+      <div id="hiro-countdown" class="hiro-timer-pill" style="padding: 6px 12px;">
+        <span style="font-size: 9px;">MEMULAI KUIS DALAM</span> <strong id="hiro-seconds" style="font-size: 12px;">20</strong>
       </div>
     </div>
   </div>

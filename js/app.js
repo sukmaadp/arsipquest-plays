@@ -60,33 +60,17 @@ function loadSiteDetail(site) {
   const detailCard = document.getElementById("detail-card");
   detailCard.className = "card card-" + getCategorySlug(site.category);
 
-  // Check validation state in localStorage
-  const validationState = localStorage.getItem(`aq_status_${site.id}`);
+  // Hide validation status container by default as it is not permanent
   const statusContainer = document.getElementById("site-status-container");
-  const statusBanner = document.getElementById("site-status-banner");
-  const btnScan = document.getElementById("btn-scan-ar");
-  const statusInfo = document.getElementById("site-status-info");
-
-  if (validationState === "success") {
-    // Validated successfully
-    statusContainer.classList.remove("hidden");
-    statusBanner.innerText = "VALIDASI BERHASIL";
-    statusBanner.className = "status-banner status-success";
-    statusInfo.innerText = "Situs ini telah berhasil kamu klaim! Kembali ke permainan board game fisik untuk membelinya.";
-    btnScan.classList.add("hidden");
-  } else if (validationState === "failed") {
-    // Failed quiz validation
-    statusContainer.classList.remove("hidden");
-    statusBanner.innerText = "VALIDASI GAGAL";
-    statusBanner.className = "status-banner status-failed";
-    statusInfo.innerText = "Validasi gagal. Kamu tidak dapat mengklaim situs ini pada putaran permainan ini.";
-    btnScan.classList.add("hidden");
-  } else {
-    // Unattempted quiz
+  if (statusContainer) {
     statusContainer.classList.add("hidden");
+  }
+
+  // Always enable the scan button
+  const btnScan = document.getElementById("btn-scan-ar");
+  if (btnScan) {
     btnScan.classList.remove("hidden");
     btnScan.onclick = function() {
-      // Redirect to AR viewer page with site ID
       window.location.href = `ar.html?site=${site.id}`;
     };
   }
@@ -154,12 +138,7 @@ function openSiteSelector() {
       btn.style.padding = "10px";
       btn.style.fontSize = "12px";
       
-      const state = localStorage.getItem(`aq_status_${site.id}`);
-      let dot = "⚪";
-      if (state === "success") dot = "🟢";
-      if (state === "failed") dot = "🔴";
-      
-      btn.innerHTML = `<span style="font-size:8px; margin-right:4px;">${dot}</span> ${site.name}`;
+      btn.innerHTML = `${site.name}`;
       btn.onclick = function() {
         window.location.href = `ar.html?site=${site.id}`;
       };
