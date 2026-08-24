@@ -8,6 +8,19 @@ function initApp() {
   const urlParams = new URLSearchParams(window.location.search);
   const siteId = urlParams.get('site') || urlParams.get('id'); // support both
 
+  // Bind homepage validation button click handler
+  const startValidationBtn = document.getElementById("btn-start-validation");
+  if (startValidationBtn) {
+    startValidationBtn.onclick = function() {
+      const currentSiteId = new URLSearchParams(window.location.search).get('site') || new URLSearchParams(window.location.search).get('id');
+      if (currentSiteId) {
+        window.location.href = `ar.html?site=${currentSiteId.toLowerCase().trim()}`;
+      } else {
+        openSiteSelector();
+      }
+    };
+  }
+
   if (siteId) {
     const site = SITES_DATA.find(s => s.id === siteId.toLowerCase().trim());
     if (site) {
@@ -23,9 +36,6 @@ function initApp() {
 function loadLandingPage() {
   document.getElementById("landing-screen").classList.remove("hidden");
   document.getElementById("detail-screen").classList.add("hidden");
-  
-  // Populate developer panel
-  populateDevGrid();
 }
 
 function loadSiteDetail(site) {
@@ -99,10 +109,13 @@ function goHome() {
   loadLandingPage();
 }
 
-// Developer Panel Simulation Grid population
-function populateDevGrid() {
-  const devGrid = document.getElementById("dev-grid");
-  devGrid.innerHTML = "";
+// Site Selector Modal population and control
+function openSiteSelector() {
+  const modal = document.getElementById("site-selector-modal");
+  if (!modal) return;
+
+  const container = document.getElementById("site-selector-list");
+  if (!container) return;
 
   // Group sites by Category
   const categories = {};
@@ -113,54 +126,54 @@ function populateDevGrid() {
     categories[site.category].push(site);
   });
 
-  // Create section for each category
+  // Render list
+  container.innerHTML = "";
   for (const [catName, sites] of Object.entries(categories)) {
     const slug = getCategorySlug(catName);
     
-    // Category Heading in Grid
-    const categoryHeader = document.createElement("div");
-    categoryHeader.style.gridColumn = "span 2";
-    categoryHeader.style.fontFamily = "var(--font-header)";
-    categoryHeader.style.fontSize = "10px";
-    categoryHeader.style.color = `var(--${slug}-color)`;
-    categoryHeader.style.marginTop = "8px";
-    categoryHeader.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
-    categoryHeader.style.paddingBottom = "2px";
-    categoryHeader.innerText = catName.toUpperCase();
-    devGrid.appendChild(categoryHeader);
+    // Category Heading
+    const header = document.createElement("div");
+    header.style.fontFamily = "var(--font-header)";
+    header.style.fontSize = "11px";
+    header.style.color = `var(--${slug}-color)`;
+    header.style.marginTop = "12px";
+    header.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+    header.style.paddingBottom = "4px";
+    header.innerText = catName.toUpperCase();
+    container.appendChild(header);
 
+    // Sites grid
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+    grid.style.gap = "8px";
+    
     sites.forEach(site => {
-      const button = document.createElement("button");
-      button.className = "dev-site-btn";
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.style.padding = "10px";
+      btn.style.fontSize = "12px";
       
-      // Add a visual status indicator dot
       const state = localStorage.getItem(`aq_status_${site.id}`);
-      let dot = "⚪"; // unattempted
+      let dot = "⚪";
       if (state === "success") dot = "🟢";
       if (state === "failed") dot = "🔴";
-
-      button.innerHTML = `<span style="font-size:8px; margin-right:4px;">${dot}</span> ${site.name}`;
-      button.onclick = function() {
-        // Update URL parameter and trigger view change
-        window.history.pushState({}, '', `?site=${site.id}`);
-        initApp();
+      
+      btn.innerHTML = `<span style="font-size:8px; margin-right:4px;">${dot}</span> ${site.name}`;
+      btn.onclick = function() {
+        window.location.href = `ar.html?site=${site.id}`;
       };
-      devGrid.appendChild(button);
+      grid.appendChild(btn);
     });
+    container.appendChild(grid);
   }
+
+  modal.classList.add("open");
 }
 
-// Collapsible Developer Simulation Hub Accordion
-function toggleDevPanel() {
-  const devGrid = document.getElementById("dev-grid");
-  const devToggleIcon = document.getElementById("dev-toggle-icon");
-  const isHidden = devGrid.classList.contains("hidden");
-
-  if (isHidden) {
-    devGrid.classList.remove("hidden");
-    devToggleIcon.innerText = "▲";
-  } else {
-    devGrid.classList.add("hidden");
-    devToggleIcon.innerText = "▼";
+function closeSiteSelector() {
+  const modal = document.getElementById("site-selector-modal");
+  if (modal) {
+    modal.classList.remove("open");
   }
 }

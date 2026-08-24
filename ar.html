@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARSIP-QUEST — AR Scanner</title>
-  
+
   <!-- CSS Styles -->
   <link rel="stylesheet" href="css/style.css">
 
@@ -13,25 +14,54 @@
   <!-- AR.js for A-Frame (webcam tracking) -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
+
 <body style="margin: 0px; overflow: hidden;">
 
-  <!-- 1. CAMERA LOADING OVERLAY -->
-  <div id="ar-loader" class="arjs-loader" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #0a0a09; color: #ecd69a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; font-family: var(--font-header);">
-    <div style="width: 50px; height: 50px; border: 3px solid rgba(207, 168, 92, 0.1); border-top: 3px solid var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
-    <div style="font-weight: bold; font-size: 16px; letter-spacing: 2px;">MENGHUBUNGKAN KAMERA AR...</div>
-    <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted); font-family: var(--font-body);">Izinkan akses kamera jika diminta browser.</div>
+  <!-- 1. INITIAL SPLASH SCREEN (WITH LANJUT BUTTON) -->
+  <div id="ar-loader" class="arjs-loader" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #0a0a09; color: #ecd69a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; font-family: var(--font-header); text-align: center; padding: 20px;">
+    <div class="logo-container" style="margin-bottom: 24px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, #12120f 40%, var(--gold-dark) 100%); border: 2px solid var(--gold-primary); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 25px var(--gold-glow);">
+      <svg style="width: 70px; height: 70px;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 8L15 22V50C15 71.5 50 90 50 90C50 90 85 71.5 85 50V22L50 8Z" fill="#12120f" stroke="#cfa85c" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="50" cy="46" r="16" stroke="#ecd69a" stroke-width="2"/>
+        <line x1="50" y1="30" x2="50" y2="62" stroke="#ecd69a" stroke-width="2"/>
+        <line x1="34" y1="46" x2="66" y2="46" stroke="#ecd69a" stroke-width="2"/>
+        <polygon points="50,38 54,46 50,54 46,46" fill="#cfa85c"/>
+      </svg>
+    </div>
+    <h1 style="font-size: 22px; margin-bottom: 8px; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--gold-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ARSIP-QUEST</h1>
+    <div style="font-size: 11px; letter-spacing: 2px; color: var(--gold-primary); text-transform: uppercase; margin-bottom: 30px;">GERBANG VALIDASI AR</div>
+    
+    <!-- Loading Spinner & Status -->
+    <div id="loader-spinner" style="width: 40px; height: 40px; border: 3px solid rgba(207, 168, 92, 0.1); border-top: 3px solid var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+    <div id="loader-status" style="font-family: var(--font-body); font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Menghubungkan kamera AR...</div>
   </div>
-  
-  <style>
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  </style>
+
+  <!-- 1B. HIRO MARKER SCANNING SPLASH (10 SECONDS) -->
+  <div id="hiro-splash" class="hiro-splash-overlay hidden">
+    <div class="hiro-splash-content">
+      <div class="scan-target-box">
+        <div class="corner-border top-left"></div>
+        <div class="corner-border top-right"></div>
+        <div class="corner-border bottom-left"></div>
+        <div class="corner-border bottom-right"></div>
+        <div class="scan-reticle"></div>
+      </div>
+      <h2 style="font-size: 18px; margin-bottom: 12px; font-family: var(--font-header);">ARAHKAN KE HIRO MARKER</h2>
+      <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-muted); max-width: 280px; margin: 0 auto 20px auto;">Dekatkan kamera ke Hiro Marker pada kartu fisik untuk memproyeksikan Diorama 3D situs sejarah.</p>
+      
+      <div id="hiro-countdown" class="hiro-timer-pill">
+        <span>MEMULAI KUIS DALAM</span> <strong id="hiro-seconds">10</strong>
+      </div>
+    </div>
+  </div>
 
   <!-- 2. SCANNING HELPER OVERLAY UI -->
   <div class="ar-overlay">
     <!-- Camera View Top Header -->
     <header class="ar-header">
       <button class="btn-back-circle" onclick="exitAR()" title="Kembali ke Detail">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
@@ -42,22 +72,29 @@
       </div>
     </header>
 
-    <!-- Instruction helper banner -->
-    <div id="ar-helper" class="ar-helper-banner">
+    <!-- Small Scanning Target overlay helper -->
+    <div id="ar-helper" class="ar-helper-banner hidden">
       <div class="ar-helper-pulse"></div>
-      <span>Arahkan kamera ke <b>Hiro Marker</b> kartu</span>
+      <span>Mencari Hiro Marker...</span>
     </div>
   </div>
 
-  <!-- 3. STORY SHEET OVERLAY (SLIDE UP CARD) -->
+  <!-- 3. STORY SHEET OVERLAY (SLIDE UP CARD WITH RESULTS) -->
   <div id="story-sheet" class="bottom-sheet">
     <div class="sheet-handle"></div>
-    <h2 class="sheet-title">SITUS TERDETEKSI</h2>
+    
+    <!-- Validation Result Block inside sheet -->
+    <div id="sheet-result-block" class="hidden" style="margin-bottom: 16px;">
+      <div id="sheet-status-banner" class="status-banner" style="margin-bottom: 8px;">VALIDASI BERHASIL</div>
+      <p id="sheet-result-message" style="font-size: 13px; text-align: center; margin-bottom: 12px; color: var(--text-bright);"></p>
+    </div>
+    
+    <h2 class="sheet-title" id="sheet-title-label">CERITA SEJARAH</h2>
     <div class="sheet-text">
       <p id="story-text">Memuat cerita sejarah...</p>
     </div>
-    <button id="btn-start-quiz" class="btn btn-gold">
-      MULAI QUIZ VALIDASI
+    <button id="btn-exit-ar" class="btn btn-gold" onclick="exitAR()">
+      SELESAI (KEMBALI KE BOARD GAME)
     </button>
   </div>
 
@@ -65,7 +102,9 @@
   <div id="quiz-modal" class="quiz-modal">
     <div class="quiz-container">
       <div class="card" style="margin-bottom: 0;">
-        <h2 style="font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid rgba(207, 168, 92, 0.2); padding-bottom: 8px;">QUIZ VALIDASI</h2>
+        <h2
+          style="font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid rgba(207, 168, 92, 0.2); padding-bottom: 8px;">
+          QUIZ VALIDASI</h2>
         <div id="quiz-question" class="quiz-question">
           Pertanyaan Soal
         </div>
@@ -79,45 +118,29 @@
     </div>
   </div>
 
-  <!-- 5. VALIDATION RESULT VIEW -->
-  <div id="result-screen" class="result-screen hidden">
-    <div class="result-glow"></div>
-    <div class="result-icon-container">
-      <!-- Checked Icon for Success / Warn Icon for Fail populated by JS -->
-      <span id="result-icon" style="font-size: 36px; line-height: 1;">✓</span>
-    </div>
-    <h1 id="result-title" class="result-title">VALIDASI BERHASIL</h1>
-    <p id="result-message" class="result-message">
-      Kamu dapat mengklaim situs ini pada board game fisik.
-    </p>
-    <button onclick="exitAR()" class="btn btn-outline" style="max-width: 250px;">
-      KEMBALI KE PORTAL
-    </button>
-  </div>
-
   <!-- 6. A-FRAME WEBAR VIEWPORT -->
-  <a-scene
-    embedded
-    vr-mode-ui="enabled: false;"
-    renderer="logarithmicDepthBuffer: true; colorManagement: true;"
+  <a-scene embedded vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true; colorManagement: true;"
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
-    
+
     <!-- Environment Ambient Lighting -->
     <a-entity light="type: ambient; color: #FFF; intensity: 0.8"></a-entity>
     <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-1 2 1"></a-entity>
 
     <!-- AR Preset Hiro Marker -->
     <a-marker preset="hiro" id="hiro-marker" marker-listener>
-      
+
       <!-- Container for models layout scale adjustment -->
       <a-entity id="diorama-root" position="0 0 0" scale="0.8 0.8 0.8" rotation="0 0 0">
-        
+
         <!-- Base Pedestal (Stays uniform for all sites projection) -->
-        <a-cylinder position="0 -0.05 0" radius="0.8" height="0.1" color="#4a3e2c" material="roughness: 0.85; metalness: 0.15"></a-cylinder>
-        <a-cylinder position="0 -0.01 0" radius="0.75" height="0.02" color="#2c3a2f" material="roughness: 0.9"></a-cylinder> <!-- Turf Top -->
+        <a-cylinder position="0 -0.05 0" radius="0.8" height="0.1" color="#4a3e2c"
+          material="roughness: 0.85; metalness: 0.15"></a-cylinder>
+        <a-cylinder position="0 -0.01 0" radius="0.75" height="0.02" color="#2c3a2f"
+          material="roughness: 0.9"></a-cylinder> <!-- Turf Top -->
 
         <!-- Dynamic GLB Model Container -->
-        <a-gltf-model id="glb-model" src="" position="0 0.05 0" scale="1 1 1" rotation="0 0 0" visible="false"></a-gltf-model>
+        <a-gltf-model id="glb-model" src="" position="0 0.05 0" scale="1 1 1" rotation="0 0 0"
+          visible="false"></a-gltf-model>
 
       </a-entity>
     </a-marker>
@@ -131,4 +154,5 @@
   <script src="js/data.js"></script>
   <script src="js/ar-app.js"></script>
 </body>
+
 </html>

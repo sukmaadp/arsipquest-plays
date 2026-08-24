@@ -363,58 +363,6 @@ p {
   transition: var(--transition-smooth);
 }
 
-/* Developer/Debug Site Selector panel at bottom of Landing Page */
-.dev-panel {
-  width: 100%;
-  border: 1px dashed rgba(207, 168, 92, 0.3);
-  background: rgba(22, 22, 18, 0.4);
-  border-radius: 12px;
-  padding: 16px;
-  margin-top: 30px;
-}
-
-.dev-panel-title {
-  font-size: 13px;
-  font-family: var(--font-header);
-  color: var(--gold-primary);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-
-.dev-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  max-height: 200px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.dev-site-btn {
-  background: rgba(30, 30, 25, 0.7);
-  border: 1px solid rgba(207, 168, 92, 0.15);
-  color: var(--text-muted);
-  font-size: 11px;
-  padding: 8px;
-  border-radius: 6px;
-  text-align: left;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: var(--transition-smooth);
-}
-
-.dev-site-btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--gold-primary);
-  color: var(--gold-light);
-}
-
 /* Category Accent Styles dynamically set via JS classes on details */
 .accent-nusantara {
   --accent-color: var(--nusantara-color);
@@ -792,4 +740,110 @@ a-scene {
   .screen {
     padding: 16px 12px;
   }
+}
+
+/* Hiro Scanning Splash Overlay Styles */
+.hiro-splash-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 10, 9, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.hiro-splash-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hiro-splash-content {
+  text-align: center;
+  padding: 20px;
+  max-width: 320px;
+  color: var(--text-bright);
+}
+
+.scan-target-box {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 30px auto;
+}
+
+.corner-border {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 3px solid transparent;
+  pointer-events: none;
+}
+
+.top-left {
+  top: 0; left: 0;
+  border-top-color: var(--gold-primary);
+  border-left-color: var(--gold-primary);
+}
+
+.top-right {
+  top: 0; right: 0;
+  border-top-color: var(--gold-primary);
+  border-right-color: var(--gold-primary);
+}
+
+.bottom-left {
+  bottom: 0; left: 0;
+  border-bottom-color: var(--gold-primary);
+  border-left-color: var(--gold-primary);
+}
+
+.bottom-right {
+  bottom: 0; right: 0;
+  border-bottom-color: var(--gold-primary);
+  border-right-color: var(--gold-primary);
+}
+
+.scan-reticle {
+  position: absolute;
+  top: 10px; left: 10px;
+  width: calc(100% - 20px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  box-shadow: 0 0 8px var(--gold-primary);
+  animation: scan-line 2s infinite ease-in-out;
+}
+
+@keyframes scan-line {
+  0% { top: 10px; opacity: 0.3; }
+  50% { top: calc(100% - 12px); opacity: 1; }
+  100% { top: 10px; opacity: 0.3; }
+}
+
+.hiro-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 22, 18, 0.8);
+  border: 1px solid var(--gold-primary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: var(--font-header);
+  font-size: 11px;
+  letter-spacing: 1px;
+  box-shadow: 0 0 15px var(--gold-glow);
+}
+
+.hiro-timer-pill strong {
+  font-size: 14px;
+  color: var(--gold-light);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

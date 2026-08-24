@@ -55,17 +55,10 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Developer/Simulation Panel -->
-    <div class="dev-panel">
-      <div class="dev-panel-title" onclick="toggleDevPanel()">
-        <span>Simulation Hub (Pilih Kartu)</span>
-        <span id="dev-toggle-icon">▼</span>
-      </div>
-      <div id="dev-grid" class="dev-grid hidden">
-        <!-- Dynamic Category Buttons populated by JS -->
-      </div>
+      
+      <button id="btn-start-validation" class="btn btn-gold" style="margin-top: 24px;">
+        LANJUTKAN VALIDASI
+      </button>
     </div>
   </div>
 
@@ -123,8 +116,23 @@
 
       <!-- Actions -->
       <button id="btn-scan-ar" class="btn btn-gold">
-        MULAI SCAN AR
+        LANJUTKAN VALIDASI
       </button>
+    </div>
+  </div>
+
+  <!-- SITE SELECTOR MODAL (Fallback when no site parameter in URL) -->
+  <div id="site-selector-modal" class="quiz-modal">
+    <div class="quiz-container" style="max-width: 480px;">
+      <div class="card" style="margin-bottom: 0; max-height: 85vh; display: flex; flex-direction: column; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(207, 168, 92, 0.2); padding-bottom: 12px; margin-bottom: 16px;">
+          <h2 style="font-size: 16px; margin-bottom: 0; font-family: var(--font-header);">PILIH KARTU SITUS</h2>
+          <button class="btn-back-circle" onclick="closeSiteSelector()" style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: var(--border-gold); background: var(--bg-secondary); color: var(--gold-light); cursor: pointer;" title="Tutup">✕</button>
+        </div>
+        <div id="site-selector-list" style="overflow-y: auto; flex-grow: 1; padding-right: 6px; display: flex; flex-direction: column; gap: 16px; text-align: left;">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </div>
     </div>
   </div>
 
