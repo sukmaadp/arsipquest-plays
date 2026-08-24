@@ -79,7 +79,7 @@ const SITES_DATA = [
     "rotation": "0 0 0",
     "category": "Kerajaan Nusantara",
     "location": "Sleman, DI Yogyakarta",
-    "story": "Prambanan merupakan kompleks candi Hindu terbesar di Indonesia yang dibangun sekitar abad ke-9. Kompleks ini terkenal dengan arsitektur tinggi menjulang and kisah legenda Roro Jonggrang yang melekat di masyarakat.",
+    "story": "Prambanan merupakan kompleks candi Hindu terbesar di Indonesia yang dibangun sekitar abad ke-9. Kompleks ini terkenal dengan arsitektur tinggi menjulang dan kisah legenda Roro Jonggrang yang melekat di masyarakat.",
     "question": "Candi Prambanan didedikasikan untuk dewa utama dalam agama Hindu yaitu...",
     "options": [
       "A. Wisnu",

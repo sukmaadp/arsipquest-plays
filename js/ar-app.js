@@ -230,11 +230,7 @@ function submitQuiz() {
 
 // Navigation utilities
 function exitAR() {
-  if (currentSite) {
-    window.location.href = `index.html?site=${currentSite.id}`;
-  } else {
-    window.location.href = "index.html";
-  }
+  window.location.href = "index.html";
 }
 
 function getCategorySlug(category) {
