@@ -35,17 +35,41 @@
       text-transform: uppercase;
       white-space: nowrap;
     }
+
+    /* Status HUD Info Pengguna */
+    #status-hud {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(18, 18, 15, 0.88);
+      color: #ecd69a;
+      border: 1px solid #cfa85c;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-family: sans-serif;
+      font-size: 13px;
+      font-weight: bold;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      white-space: nowrap;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- Status HUD Real-time -->
+  <div id="status-hud">📷 Membuka kamera...</div>
 
   <!-- Tombol Langsung ke Kuis -->
   <button class="btn-ar-quiz" onclick="window.location.href='quiz.html?id=museum_nasional_indonesia'">
     LANJUT KE KUIS →
   </button>
 
-  <a-scene embedded vr-mode-ui="enabled: false;"
+  <a-scene embedded vr-mode-ui="enabled: false;" loading-screen="enabled: false;"
     renderer="logarithmicDepthBuffer: true; colorManagement: true;"
     arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
 
@@ -54,15 +78,11 @@
     <a-entity light="type: directional; color: #ffffff; intensity: 1.2;" position="1 2 2"></a-entity>
     <a-entity light="type: directional; color: #ffffff; intensity: 0.8;" position="-1 1 2"></a-entity>
 
-    <a-assets>
-      <a-asset-item id="model" src="assets/models/museum_nasional_indonesia.glb"></a-asset-item>
-    </a-assets>
-
     <a-marker preset="hiro" id="m">
-      <!-- Model 3D menghadap ke depan ke arah kamera (rotation -90 0 0) -->
+      <!-- Model 3D langsung dimuat di marker TANPA <a-assets> agar kamera langsung aktif seketika -->
       <a-gltf-model 
         id="model-3d"
-        src="#model" 
+        src="assets/models/museum_nasional_indonesia.glb" 
         scale="0.6 0.6 0.6" 
         rotation="-90 0 0"
         position="0 0 0">
@@ -73,16 +93,55 @@
   </a-scene>
 
   <script>
+    const hud = document.getElementById('status-hud');
+    const model = document.getElementById('model-3d');
     const marker = document.getElementById('m');
+
+    // Cek status kamera aktif
+    function updateCameraStatus() {
+      const video = document.querySelector('video#arjs-video') || document.querySelector('video');
+      if (video && video.readyState >= 2) {
+        if (hud && hud.innerText.includes('Membuka kamera')) {
+          hud.innerText = '⏳ Kamera aktif! Mengunduh model 3D...';
+        }
+      }
+    }
+    window.addEventListener('arjs-video-loaded', updateCameraStatus);
+    const checkVideo = setInterval(() => {
+      updateCameraStatus();
+      const video = document.querySelector('video#arjs-video') || document.querySelector('video');
+      if (video && video.readyState >= 2) clearInterval(checkVideo);
+    }, 500);
+
+    // Ketika file model 3D selesai terunduh
+    if (model) {
+      model.addEventListener('model-loaded', () => {
+        if (hud) {
+          hud.innerText = '✨ Siap! Arahkan kamera ke kartu marker';
+          setTimeout(() => {
+            hud.style.opacity = '0';
+          }, 3000);
+        }
+      });
+    }
 
     // Deteksi marker Hiro -> redirect otomatis setelah 10 detik
     if (marker) {
       marker.addEventListener('markerFound', () => {
+        if (hud) {
+          hud.style.opacity = '1';
+          hud.innerText = '🎯 Marker terdeteksi! Menuju kuis...';
+        }
         setTimeout(() => {
           window.location.href = "quiz.html?id=museum_nasional_indonesia";
         }, 10000);
       });
     }
+
+    window.addEventListener('camera-error', () => {
+      if (hud) hud.innerText = '⚠️ Akses kamera ditolak';
+      alert('Tidak dapat mengakses kamera. Pastikan Anda mengizinkan akses kamera di browser!');
+    });
   </script>
 </body>
 </html>
