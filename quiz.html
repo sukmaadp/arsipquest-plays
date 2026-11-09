@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARSIP-QUEST — Kuis & Validasi Klaim Situs</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .quiz-page-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px 16px 40px 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quiz-card {
+      background: var(--bg-card);
+      border: var(--border-gold);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .facts-box {
+      margin-top: 20px;
+      padding: 18px;
+      background: rgba(207, 168, 92, 0.08);
+      border: 1px solid var(--gold-primary);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .locked-box {
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px dashed rgba(239, 68, 68, 0.4);
+      border-radius: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: #ef4444;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="quiz-page-container">
+    <!-- Top Header -->
+    <header class="landing-header" style="margin-bottom: 20px;">
+      <div class="logo-container" style="width: 50px; height: 50px; margin-bottom: 8px;">
+        <svg class="logo-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="width: 32px; height: 32px;">
+          <path d="M50 8L15 22V50C15 71.5 50 90 50 90C50 90 85 71.5 85 50V22L50 8Z" fill="#12120f" stroke="#cfa85c"
+            stroke-width="3" stroke-linejoin="round" />
+          <circle cx="50" cy="46" r="16" stroke="#ecd69a" stroke-width="2" />
+          <line x1="50" y1="30" x2="50" y2="62" stroke="#ecd69a" stroke-width="2" />
+          <line x1="34" y1="46" x2="66" y2="46" stroke="#ecd69a" stroke-width="2" />
+          <polygon points="50,38 54,46 50,54 46,46" fill="#cfa85c" />
+        </svg>
+      </div>
+      <h1 class="landing-title" style="font-size: 20px;">ARSIP-QUEST</h1>
+      <div class="landing-subtitle" style="font-size: 11px;">GERBANG VALIDASI KLAIM SITUS</div>
+    </header>
+
+    <!-- Site Information Card -->
+    <div id="site-card" class="quiz-card">
+      <div id="site-badge" class="badge">KATEGORI</div>
+      <h2 id="site-title" style="font-size: 22px; margin-bottom: 6px; color: var(--gold-light);">NAMA SITUS</h2>
+      <div style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 12px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-primary)" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span id="site-location">Lokasi Situs</span>
+      </div>
+    </div>
+
+    <!-- Quiz Question Section -->
+    <div id="quiz-section" class="quiz-card">
+      <h3
+        style="font-size: 13px; margin-bottom: 14px; border-bottom: 1px solid rgba(207, 168, 92, 0.2); padding-bottom: 8px; letter-spacing: 1px;">
+        PERTANYAAN VALIDASI KLAIM
+      </h3>
+      <div id="quiz-question"
+        style="font-size: 16px; line-height: 1.6; color: #fff; font-weight: 500; margin-bottom: 24px;">
+        Memuat pertanyaan kuis...
+      </div>
+      <div id="quiz-options" class="quiz-options">
+        <!-- Opsi jawaban dimuat dinamis -->
+      </div>
+      <button id="btn-submit" class="btn btn-gold" disabled onclick="submitAnswer()">
+        KIRIM JAWABAN
+      </button>
+    </div>
+
+    <!-- Result Section (Muncul setelah pemain menjawab) -->
+    <div id="result-section" class="quiz-card hidden">
+      <!-- Status Banner -->
+      <div id="status-banner" class="status-banner" style="margin-bottom: 16px;">
+        STATUS VALIDASI
+      </div>
+
+      <!-- Pesan Klaim Situs -->
+      <p id="claim-message"
+        style="font-size: 14px; text-align: center; color: var(--text-bright); line-height: 1.6; margin-bottom: 16px;">
+        Pesan klaim situs...
+      </p>
+
+      <!-- Kotak Fakta Unik (HANYA MUNCUL JIKA JAWABAN BENAR) -->
+      <div id="facts-box" class="facts-box hidden">
+        <h3 id="story-title"
+          style="font-size: 13px; margin-bottom: 8px; color: var(--gold-light); letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+          <span>✨</span> FAKTA UNIK & SEJARAH SITUS
+        </h3>
+        <p id="story-text" style="font-size: 13px; line-height: 1.6; color: var(--text-bright); margin-bottom: 0;">
+          Narasi fakta unik...
+        </p>
+      </div>
+
+      <!-- Pesan Kunci Fakta (JIKA JAWABAN SALAH) -->
+      <div id="locked-box" class="locked-box hidden">
+        🔒 <strong>Fakta Unik Terkunci:</strong> Fakta sejarah dan unik hanya terbuka bagi pemain yang berhasil menjawab
+        kuis dengan benar.
+      </div>
+
+
+    </div>
+
+    <!-- Not Found Card -->
+    <div id="notfound-card" class="quiz-card hidden" style="text-align: center;">
+      <h2 style="font-size: 18px; color: #ef4444; margin-bottom: 12px;">Situs Tidak Ditemukan</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+        ID situs tidak dikenali. Pastikan Anda membuka halaman kuis dari link kartu yang sesuai.
+      </p>
+      <a href="index.html" class="btn btn-outline">KEMBALI KE MENU UTAMA</a>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script>
+    let currentSite = null;
+    let selectedOption = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteId = urlParams.get('id') || urlParams.get('site');
+
+      if (!siteId) {
+        showNotFound();
+        return;
+      }
+
+      currentSite = window.findSiteBySlug ? window.findSiteBySlug(siteId) : null;
+      if (!currentSite) {
+        showNotFound();
+        return;
+      }
+
+      loadSiteData(currentSite);
+    });
+
+    function showNotFound() {
+      document.getElementById("site-card").classList.add("hidden");
+      document.getElementById("quiz-section").classList.add("hidden");
+      document.getElementById("notfound-card").classList.remove("hidden");
+    }
+
+    function loadSiteData(site) {
+      document.getElementById("site-title").innerText = site.name.toUpperCase();
+      document.getElementById("site-location").innerText = site.location;
+      document.getElementById("site-badge").innerText = site.category;
+
+      const catSlug = getCategorySlug(site.category);
+      document.getElementById("site-badge").className = `badge badge-${catSlug}`;
+      document.getElementById("site-card").className = `quiz-card card-${catSlug}`;
+
+      // Load Quiz Question
+      document.getElementById("quiz-question").innerText = site.question;
+      const optionsContainer = document.getElementById("quiz-options");
+      optionsContainer.innerHTML = "";
+      selectedOption = null;
+      document.getElementById("btn-submit").setAttribute("disabled", "true");
+
+      site.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          selectedOption = opt;
+          document.getElementById("btn-submit").removeAttribute("disabled");
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function submitAnswer() {
+      if (!selectedOption || !currentSite) return;
+
+      const isCorrect = (selectedOption.trim() === currentSite.correct_answer.trim());
+
+      // Sembunyikan bagian kuis, tampilkan hasil
+      document.getElementById("quiz-section").classList.add("hidden");
+      const resultSec = document.getElementById("result-section");
+      resultSec.classList.remove("hidden");
+
+      const banner = document.getElementById("status-banner");
+      const claimMsg = document.getElementById("claim-message");
+      const factsBox = document.getElementById("facts-box");
+      const lockedBox = document.getElementById("locked-box");
+      const storyTitle = document.getElementById("story-title");
+      const storyText = document.getElementById("story-text");
+
+      if (isCorrect) {
+        // === JIKA BERHASIL MENJAWAB ===
+        // 1. Klaim diizinkan
+        banner.innerText = "VALIDASI BERHASIL — KLAIM DIIZINKAN";
+        banner.className = "status-banner status-success";
+        claimMsg.innerHTML = `🎉 <strong>SELAMAT! JAWABANMU BENAR.</strong><br>Situs <strong>${currentSite.name}</strong> sekarang resmi menjadi milikmu!<br><span style="font-size:12px; color: var(--gold-light);">Silakan ambil kartu situs dan klaim tempat ini pada papan board game fisik.</span>`;
+
+        // 2. Fakta unik & sejarah MUNCUL
+        storyTitle.innerHTML = `<span>✨</span> FAKTA UNIK & SEJARAH: ${currentSite.name.toUpperCase()}`;
+        storyText.innerText = currentSite.story;
+        factsBox.classList.remove("hidden");
+        lockedBox.classList.add("hidden");
+      } else {
+        // === JIKA GAGAL MENJAWAB ===
+        // 1. Tidak boleh klaim
+        banner.innerText = "VALIDASI GAGAL — DILARANG KLAIM";
+        banner.className = "status-banner status-failed";
+        claimMsg.innerHTML = `❌ <strong>JAWABAN KURANG TEPAT!</strong><br>Kamu <strong>TIDAK BISA</strong> mengklaim situs <strong>${currentSite.name}</strong> pada putaran ini.<br><span style="font-size:12px; opacity:0.8;">Berdasarkan aturan permainan, giliranmu telah berakhir. Silakan lanjutkan giliran ke pemain berikutnya.</span>`;
+
+        // 2. Fakta unik TIDAK MUNCUL (terkunci)
+        factsBox.classList.add("hidden");
+        lockedBox.classList.remove("hidden");
+      }
+    }
+
+    function goToAR() {
+      if (currentSite) {
+        window.location.href = `${currentSite.id}.html`;
+      } else {
+        window.location.href = "index.html";
+      }
+    }
+
+    function finishGame() {
+      alert(`Validasi ${currentSite ? currentSite.name : 'situs'} selesai! Silakan kembali ke papan board game fisik.`);
+    }
+
+    function getCategorySlug(category) {
+      if (!category) return "default";
+      const cat = category.toLowerCase();
+      if (cat.includes("nusantara")) return "nusantara";
+      if (cat.includes("perjuangan") || cat.includes("kolonial")) return "kolonial";
+      if (cat.includes("kebudayaan") || cat.includes("istana")) return "istana";
+      if (cat.includes("lalu") || cat.includes("jejak")) return "masa-lalu";
+      return "default";
+    }
+  </script>
+</body>
+
+</html>

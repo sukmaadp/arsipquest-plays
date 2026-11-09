@@ -853,3 +853,47 @@ a-scene {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Floating Action Button for AR -> Quiz Transition */
+.btn-ar-continue {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 420px;
+  z-index: 180;
+  padding: 16px 24px;
+  font-size: 15px;
+  box-shadow: 0 4px 25px rgba(207, 168, 92, 0.65);
+  animation: pulse-ar-btn 2.2s infinite ease-in-out;
+  border-radius: 14px;
+}
+
+@keyframes pulse-ar-btn {
+  0% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 4px 20px rgba(207, 168, 92, 0.45);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.03);
+    box-shadow: 0 8px 32px rgba(207, 168, 92, 0.85);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 4px 20px rgba(207, 168, 92, 0.45);
+  }
+}
+
+.ar-marker-alert {
+  background: rgba(16, 185, 129, 0.9) !important;
+  border-color: #10b981 !important;
+  color: #fff !important;
+}
+
+/* Responsive adjustment for screens layered over AR */
+#detail-screen, #landing-screen, #notfound-screen {
+  z-index: 10;
+  position: relative;
+}
+
