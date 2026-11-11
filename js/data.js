@@ -340,6 +340,24 @@ const SITES_DATA = [
       "D. Pajajaran"
     ],
     "correct_answer": "B. Majapahit"
+  },
+  {
+    "id": "situs_gunung_padang",
+    "name": "Gunung Padang",
+    "glbPath": "",
+    "scale": "0.6 0.6 0.6",
+    "rotation": "-90 0 0",
+    "category": "Situs & Jejak Masa Lalu",
+    "location": "Cianjur, Jawa Barat",
+    "story": "Gunung Padang di Cianjur, Jawa Barat, merupakan situs megalitik yang tersusun dari batu-batu andesit berbentuk punden berundak. Banyak peneliti meyakini situs ini digunakan sebagai tempat ritual oleh masyarakat prasejarah. Hingga kini Gunung Padang masih menjadi salah satu objek penelitian arkeologi yang menarik perhatian dunia.",
+    "question": "Gunung Padang dikenal sebagai salah satu situs...",
+    "options": [
+      "A. Benteng VOC",
+      "B. Punden berundak megalitik",
+      "C. Keraton kerajaan",
+      "D. Pelabuhan kuno"
+    ],
+    "correct_answer": "B. Punden berundak megalitik"
   }
 ];
 
@@ -355,8 +373,12 @@ function findSiteBySlug(rawSlug) {
   clean = clean.replace(/^[/\\]+|[/\\]+$/g, "");
   clean = clean.replace(/-/g, "_");
 
-  // Direct ID match
-  return SITES_DATA.find(s => s.id === clean) || null;
+  // Direct ID match or alias match (with or without situs_ prefix)
+  return SITES_DATA.find(s => 
+    s.id === clean || 
+    s.id === "situs_" + clean || 
+    s.id.replace(/^situs_/, "") === clean
+  ) || null;
 }
 
 // Attach globally
